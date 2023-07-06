@@ -8465,3 +8465,22 @@ function is_php_version_compatible( $required ) {
 function wp_fuzzy_number_match( $expected, $actual, $precision = 1 ) {
 	return abs( (float) $expected - (float) $actual ) <= $precision;
 }
+
+
+function custom_text_validation($result, $tag) {
+	echo"<pre>";
+	print_r($_POST);
+    $type = $tag->type; //object instead of array
+    $name = $tag->name; //object instead of array
+	$result->invalidate($tag, "Invalid Mobile Number.");
+    if($name == 'MNumber') {
+        $value = $_POST[$name];
+        if(!preg_match("/^(\+965[569]\d{7})$/g", $value )){ //new regex statement
+            $result->invalidate($tag, "Invalid Mobile Number.");
+        }
+    }
+    return $result;
+}
+add_filter('wpcf7-validates-as-tel', 'custom_text_validation', 20, 2);
+add_filter('wpcf7-validates-as-tel*', 'custom_text_validation', 20, 2);
+// echo"<pre>";
